@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureNest - Your Intelligent Home Guardian</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#004794',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #003366 0%, #004794 100%);
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            transition: transform 0.3s ease;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .alert-item {
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+        .video-container {
+            aspect-ratio: 16/9;
+            background-color: #000;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="gradient-bg text-white">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/widecanvas-d0dd4.appspot.com/o/logos%2Flogo.png?alt=media&token=11dbead3-c19e-49bc-8e46-a69caf2aed1e" 
+                         alt="SecureNest Logo" 
+                         class="h-10 mr-2">
+                    <span class="text-2xl font-bold">SecureNest</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="hover:text-gray-200">Home</a>
+                    <a href="#features" class="hover:text-gray-200">Features</a>
+                    <a href="#" onclick="openModal('monitoringPanel')" class="hover:text-gray-200">Monitoring</a>
+                    <a href="#about" class="hover:text-gray-200">About</a>
+                    <button onclick="openModal('loginModal')" class="bg-white text-primary px-6 py-2 rounded-full font-medium hover:bg-gray-100">
+                        <i class="bi bi-person"></i> Profile
+                    </button>
+                </div>
+                <button class="md:hidden text-2xl" id="mobileMenuBtn">
+                    <i class="bi bi-list"></i>
+                </button>
+            </div>
+            <!-- Mobile Menu -->
+            <div class="hidden md:hidden" id="mobileMenu">
+                <div class="flex flex-col space-y-4 mt-4">
+                    <a href="#" class="hover:text-gray-200">Home</a>
+                    <a href="#features" class="hover:text-gray-200">Features</a>
+                    <a href="#" onclick="openModal('monitoringPanel')" class="hover:text-gray-200">Monitoring</a>
+                    <a href="#about" class="hover:text-gray-200">About</a>
+                    <button onclick="openModal('loginModal')" class="bg-white text-primary px-6 py-2 rounded-full font-medium hover:bg-gray-100">
+                        <i class="bi bi-person"></i> Profile
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <div class="container mx-auto px-6 py-20">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-6">Your Intelligent Home Guardian</h1>
+                    <p class="text-lg mb-8">Stay connected and protected with real-time monitoring and instant alerts. Watch over your nest from anywhere, anytime.</p>
+                    <button onclick="openModal('loginModal')" class="bg-white text-primary px-8 py-3 rounded-full font-medium hover:bg-gray-100">
+                        Get Started Today
+                    </button>
+                </div>
+                <div class="md:w-1/2">
+                    <img src="https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=800" alt="Smart Home Security" class="rounded-lg shadow-xl">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-16">Key Features</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Real-Time Alerts Card -->
+                <div class="bg-white p-8 rounded-lg shadow-lg card-hover cursor-pointer" onclick="openAlertsPanel()">
+                    <i class="bi bi-bell text-4xl text-primary mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-4">Real-Time Alerts</h3>
+                    <p class="text-gray-600">Receive instant notifications with precise timestamps when unfamiliar faces are detected.</p>
+                </div>
+
+                <!-- Live Monitoring Card -->
+                <div class="bg-white p-8 rounded-lg shadow-lg card-hover cursor-pointer" onclick="openMonitoringPanel()">
+                    <i class="bi bi-camera-video text-4xl text-primary mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-4">Live Monitoring</h3>
+                    <p class="text-gray-600">Access live video feeds of your home environment from anywhere, at any time.</p>
+                </div>
+
+                <!-- Environmental Awareness Card -->
+                <div class="bg-white p-8 rounded-lg shadow-lg card-hover cursor-pointer" onclick="openEnvironmentalPanel()">
+                    <i class="bi bi-wind text-4xl text-primary mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-4">Environmental Awareness</h3>
+                    <p class="text-gray-600">Monitor air quality, temperature, and humidity with integrated sensors.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="bg-gray-100 py-20">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-12">About SecureNest</h2>
+            <div class="max-w-3xl mx-auto text-center">
+                <p class="text-gray-700 mb-8">
+                    SecureNest is your intelligent home guardian, combining cutting-edge technology with seamless user experience. 
+                    Our advanced IoT and machine learning systems work tirelessly to keep your home secure and your mind at peace.
+                </p>
+                <p class="text-gray-700">
+                    Founded with a mission to revolutionize home security, we've helped thousands of homeowners protect what matters most. 
+                    Our system is constantly evolving, learning, and improving to provide you with the most reliable security solution.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modals -->
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="fixed inset-0 flex items-center justify-center">
+            <div class="bg-white p-8 rounded-lg shadow-xl w-96">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold">Login to SecureNest</h3>
+                    <button onclick="closeModal('loginModal')" class="text-gray-500 hover:text-gray-700">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    <button class="w-full bg-red-500 text-white py-2 rounded-lg flex items-center justify-center">
+                        <i class="bi bi-google mr-2"></i> Continue with Google
+                    </button>
+                    <div class="text-center text-gray-500">or</div>
+                    <input type="email" placeholder="Email" class="w-full px-4 py-2 border rounded-lg">
+                    <input type="password" placeholder="Password" class="w-full px-4 py-2 border rounded-lg">
+                    <button class="w-full bg-primary text-white py-2 rounded-lg">Login</button>
+                    <p class="text-center text-gray-600">
+                        Don't have an account? 
+                        <a href="#" class="text-primary">Sign up</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alerts Panel -->
+    <div id="alertsPanel" class="modal">
+        <div class="fixed inset-0 flex items-center justify-center">
+            <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-2xl max-h-[80vh] overflow-y-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold">Recent Alerts</h3>
+                    <button onclick="closeModal('alertsPanel')" class="text-gray-500 hover:text-gray-700">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+                <div id="alertsList" class="space-y-4">
+                    <!-- Alert items will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Monitoring Panel -->
+    <div id="monitoringPanel" class="modal">
+        <div class="fixed inset-0 flex items-center justify-center">
+            <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-4xl">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold">Live Surveillance</h3>
+                    <button onclick="closeModal('monitoringPanel')" class="text-gray-500 hover:text-gray-700">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+                <div class="video-container bg-black rounded-lg mb-4"></div>
+                <div class="flex justify-between items-center">
+                    <button id="toggleSurveillance" class="bg-primary text-white px-6 py-2 rounded-lg">
+                        <i class="bi bi-camera-video"></i> Start Surveillance
+                    </button>
+                    <div class="text-gray-600">
+                        Status: <span id="surveillanceStatus">Inactive</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Environmental Panel -->
+    <div id="environmentalPanel" class="modal">
+        <div class="fixed inset-0 flex items-center justify-center">
+            <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-2xl">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold">Environmental Monitoring</h3>
+                    <button onclick="closeModal('environmentalPanel')" class="text-gray-500 hover:text-gray-700">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="p-4 border rounded-lg text-center">
+                        <i class="bi bi-thermometer-half text-3xl text-red-500"></i>
+                        <h4 class="font-semibold mt-2">Temperature</h4>
+                        <p id="temperature" class="text-2xl">23°C</p>
+                    </div>
+                    <div class="p-4 border rounded-lg text-center">
+                        <i class="bi bi-droplet text-3xl text-blue-500"></i>
+                        <h4 class="font-semibold mt-2">Humidity</h4>
+                        <p id="humidity" class="text-2xl">45%</p>
+                    </div>
+                    <div class="p-4 border rounded-lg text-center">
+                        <i class="bi bi-wind text-3xl text-green-500"></i>
+                        <h4 class="font-semibold mt-2">Air Quality</h4>
+                        <p id="airQuality" class="text-2xl">Good</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        // Alerts Panel
+        function openAlertsPanel() {
+            openModal('alertsPanel');
+            loadAlerts();
+        }
+
+        function loadAlerts() {
+            const alertsList = document.getElementById('alertsList');
+            alertsList.innerHTML = ''; // Clear existing alerts
+            
+            // Sample alerts data
+            const alerts = [
+                { time: '2023-11-20 14:30', message: 'Unknown person detected at front door' },
+                { time: '2023-11-20 12:15', message: 'Movement detected in backyard' },
+                { time: '2023-11-20 09:45', message: 'Unknown person detected at garage' }
+            ];
+
+            alerts.forEach(alert => {
+                const alertElement = document.createElement('div');
+                alertElement.className = 'alert-item flex justify-between items-center p-4 bg-gray-50 rounded-lg';
+                alertElement.innerHTML = `
+                    <div>
+                        <p class="font-semibold">${alert.message}</p>
+                        <p class="text-sm text-gray-500">${alert.time}</p>
+                    </div>
+                    <button onclick="deleteAlert(this)" class="text-red-500 hover:text-red-700">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                `;
+                alertsList.appendChild(alertElement);
+            });
+        }
+
+        function deleteAlert(button) {
+            button.parentElement.remove();
+        }
+
+        // Live Monitoring
+        const toggleSurveillance = document.getElementById('toggleSurveillance');
+        const surveillanceStatus = document.getElementById('surveillanceStatus');
+        let isActive = false;
+
+        toggleSurveillance.addEventListener('click', () => {
+            isActive = !isActive;
+            surveillanceStatus.textContent = isActive ? 'Active' : 'Inactive';
+            toggleSurveillance.innerHTML = isActive ? 
+                '<i class="bi bi-camera-video-off"></i> Stop Surveillance' :
+                '<i class="bi bi-camera-video"></i> Start Surveillance';
+            toggleSurveillance.classList.toggle('bg-red-600');
+        });
+
+        // Environmental Monitoring
+        function updateEnvironmentalData() {
+            // Simulate real-time updates
+            document.getElementById('temperature').textContent = 
+                Math.floor(20 + Math.random() * 5) + '°C';
+            document.getElementById('humidity').textContent = 
+                Math.floor(40 + Math.random() * 20) + '%';
+            const qualities = ['Good', 'Moderate', 'Poor'];
+            document.getElementById('airQuality').textContent = 
+                qualities[Math.floor(Math.random() * qualities.length)];
+        }
+
+        // Update environmental data every 5 seconds
+        setInterval(updateEnvironmentalData, 5000);
+        updateEnvironmentalData(); // Initial update
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
